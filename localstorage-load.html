@@ -1,0 +1,56 @@
+<link rel="import" href="../zip-download/zip-download.html">
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../zip-upload/zip-upload.html">
+
+<dom-module id="localstorage-load">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <h2>Hello [[prop1]]!</h2>
+    <zip-upload files="{{files}}"></zip-upload>
+    <zip-download files="[[files]]">save</zip-download>
+  </template>
+
+  <script>
+    /**
+     * `localstorage-load`
+     *  loads and saves local storage
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class LocalstorageLoad extends Polymer.Element {
+      static get is() { return 'localstorage-load'; }
+      static get properties() {
+        return {
+          files: {
+            type: Object,
+            value: {"123.json":"true"},
+            observer: '_filesChanged'
+          }
+        };
+      }
+      _filesChanged(newValue, oldValue) {
+        console.log(newValue)
+        Object.keys(newValue).forEach(name => {
+          let lsName = name.replace(".json","")
+          let lsValue 
+          try {
+            lsValue = JSON.parse(newValue[name])
+          } catch (e) {
+            lsValue = newValue[name]
+          }
+          if (window.localStorage.getItem(lsName) !== JSON.stringify(lsValue) ) {
+            window.localStorage.setItem(lsName, lsValue)
+          }
+        })
+      }
+    }
+
+    window.customElements.define(LocalstorageLoad.is, LocalstorageLoad);
+  </script>
+</dom-module>

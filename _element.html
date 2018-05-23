@@ -1,0 +1,36 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="localstorage-load">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <h2>Hello [[prop1]]!</h2>
+  </template>
+
+  <script>
+    /**
+     * `localstorage-load`
+     *  loads and saves local storage
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class LocalstorageLoad extends Polymer.Element {
+      static get is() { return 'localstorage-load'; }
+      static get properties() {
+        return {
+          prop1: {
+            type: String,
+            value: 'localstorage-load'
+          }
+        };
+      }
+    }
+
+    window.customElements.define(LocalstorageLoad.is, LocalstorageLoad);
+  </script>
+</dom-module>

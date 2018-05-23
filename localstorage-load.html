@@ -4,14 +4,8 @@
 
 <dom-module id="localstorage-load">
   <template>
-    <style>
-      :host {
-        display: block;
-      }
-    </style>
-    <h2>Hello [[prop1]]!</h2>
     <zip-upload files="{{files}}"></zip-upload>
-    <zip-download files="[[files]]">save</zip-download>
+    <zip-download name="localStorage" files="[[files]]">save</zip-download>
   </template>
 
   <script>
@@ -29,25 +23,47 @@
         return {
           files: {
             type: Object,
-            value: {"123.json":"true"},
             observer: '_filesChanged'
           }
         };
       }
-      _filesChanged(newValue, oldValue) {
-        console.log(newValue)
+      ready() {
+        super.ready()
+        if (!Object.keys(this.files).length && localStorage.length) {
+          let files = {}
+          let map = {}
+          Object.keys(localStorage).forEach(name => {
+            files[name.replace(/([^a-z0-9 ]+)/gi, '-') + ".json"] = localStorage[name]
+            if (name != name.replace(/([^a-z0-9 ]+)/gi, '-')) {
+              map[name.replace(/([^a-z0-9 ]+)/gi, '-')] = name
+            }
+          })
+          if (Object.keys(map).length) {
+            files.fileNameMap = JSON.stringify(map)
+          }
+          this.files = files
+        }
+      }
+      _filesChanged(files) {
+        let newValue = files
+        let map = {}
+        if (newValue && newValue.fileNameMap) {
+          map = JSON.parse(newValue.fileNameMap)
+          delete(newValue.fileNameMap)
+        } 
         Object.keys(newValue).forEach(name => {
-          let lsName = name.replace(".json","")
+          let lsName = name.replace(/\.json$/ ,"")
           let lsValue 
           try {
             lsValue = JSON.parse(newValue[name])
           } catch (e) {
             lsValue = newValue[name]
           }
-          if (window.localStorage.getItem(lsName) !== JSON.stringify(lsValue) ) {
-            window.localStorage.setItem(lsName, lsValue)
+          if (localStorage.getItem(map[lsName] || lsName) !== JSON.stringify(lsValue) ) {
+            localStorage.setItem(map[lsName] || lsName, lsValue)
           }
         })
+        return 
       }
     }
 

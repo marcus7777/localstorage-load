@@ -1,9 +1,10 @@
 {
   "name": "localstorage-load",
-  "description": " loads and saves local storage",
+  "description": "loads and saves local storage",
   "main": "localstorage-load.html",
   "dependencies": {
-    "polymer": "Polymer/polymer#^2.0.0"
+    "zip-download": "marcus7777/zip-download",
+    "zip-upload": "marcus7777/zip-upload"
   },
   "devDependencies": {
     "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^2.0.0",
@@ -12,5 +13,17 @@
   },
   "resolutions": {
     "polymer": "^2.0.0"
-  }
+  },
+  "homepage": "https://github.com/marcus7777/localstorage-load",
+  "authors": [
+    "Marcus Hitchins <marcus@kano.me>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
 }

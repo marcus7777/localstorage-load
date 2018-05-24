@@ -6,6 +6,7 @@
   <template>
     <zip-upload files="{{files}}"></zip-upload>
     <zip-download name="localStorage" files="[[files]]">save</zip-download>
+    <button on-click="clear" on-tap="clear"> clear </button>
   </template>
 
   <script>
@@ -60,6 +61,9 @@
           }
         })
         return 
+      }
+      clear () {
+        localStorage.clear()
       }
     }
 

@@ -53,8 +53,8 @@
               localStorage.setItem( name,newValue[name] )
             }
           } else {
-            if (localStorage.getItem(name) !== JSON.parse(newValue[name])) {
-              localStorage.setItem( name, JSON.parse(newValue[name]) )
+            if (localStorage.getItem(name) !== JSON.stringify(newValue[name])) {
+              localStorage.setItem( name, JSON.stringify(newValue[name]) )
             }
           }
         })

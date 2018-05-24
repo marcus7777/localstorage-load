@@ -31,36 +31,31 @@
         super.ready()
         if (!Object.keys(this.files).length && localStorage.length) {
           let files = {}
-          let map = {}
           Object.keys(localStorage).forEach(name => {
-            files[name.replace(/([^a-z0-9 ]+)/gi, '-') + ".json"] = localStorage[name]
-            if (name != name.replace(/([^a-z0-9 ]+)/gi, '-')) {
-              map[name.replace(/([^a-z0-9 ]+)/gi, '-')] = name
+            let filesValue = {}
+            try {
+              filesValue[name] = JSON.parse(localStorage[name])
+            } catch (e) {
+              filesValue[name] = localStorage[name]
             }
+            files[name.replace(/([^a-z0-9 ]+)/gi, '-') + ".json"] = JSON.stringify(filesValue)
           })
-          if (Object.keys(map).length) {
-            files.fileNameMap = JSON.stringify(map)
-          }
           this.files = files
         }
       }
       _filesChanged(files) {
-        let newValue = files
-        let map = {}
-        if (newValue && newValue.fileNameMap) {
-          map = JSON.parse(newValue.fileNameMap)
-          delete(newValue.fileNameMap)
-        } 
+        let newValue = Object.keys(files).reduce(function(accumulator, curV) {
+          return Object.assign(accumulator, JSON.parse(files[curV]))
+        }, {})
         Object.keys(newValue).forEach(name => {
-          let lsName = name.replace(/\.json$/ ,"")
-          let lsValue 
-          try {
-            lsValue = JSON.parse(newValue[name])
-          } catch (e) {
-            lsValue = newValue[name]
-          }
-          if (localStorage.getItem(map[lsName] || lsName) !== JSON.stringify(lsValue) ) {
-            localStorage.setItem(map[lsName] || lsName, lsValue)
+          if (typeof newValue[name] === 'string') { 
+            if (localStorage.getItem(name) !== newValue[name]) {
+              localStorage.setItem( name,newValue[name] )
+            }
+          } else {
+            if (localStorage.getItem(name) !== JSON.parse(newValue[name])) {
+              localStorage.setItem( name, JSON.parse(newValue[name]) )
+            }
           }
         })
         return 

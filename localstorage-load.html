@@ -60,7 +60,7 @@
             }
           }
         })
-        return 
+        return this.dispatchEvent(new CustomEvent('load', {detail: {}}));
       }
       clear () {
         localStorage.clear()
